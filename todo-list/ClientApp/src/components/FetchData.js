@@ -5,31 +5,37 @@ export class FetchData extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true };
+    this.state = { tasks: [], loading: true };
   }
 
   componentDidMount() {
-    this.populateWeatherData();
+    this.fetchUserTasks();
   }
 
-  static renderForecastsTable(forecasts) {
+  static renderUserTasks(userTasks) {
     return (
-      <table className='table table-striped' aria-labelledby="tabelLabel">
+      <table className='table table-striped' aria-labelledby="tableLabel">
         <thead>
           <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
+            <th>ID</th>
+            <th>Priority</th>
+            <th>Status</th>
             <th>Summary</th>
+            <th>Description</th>
+            <th>Created</th>
+            <th>Due</th>
           </tr>
         </thead>
         <tbody>
-          {forecasts.map(forecast =>
-            <tr key={forecast.date}>
-              <td>{forecast.date}</td>
-              <td>{forecast.temperatureC}</td>
-              <td>{forecast.temperatureF}</td>
-              <td>{forecast.summary}</td>
+          {userTasks.map(userTask =>
+            <tr key={userTask.id}>
+              <td>{userTask.id}</td>
+              <td>{userTask.priority}</td>
+              <td>{userTask.status}</td>
+              <td>{userTask.summary}</td>
+              <td>{userTask.description}</td>
+              <td>{userTask.createdAt}</td>
+              <td>{userTask.dueAt}</td>
             </tr>
           )}
         </tbody>
@@ -40,20 +46,20 @@ export class FetchData extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchData.renderForecastsTable(this.state.forecasts);
+      : FetchData.renderUserTasks(this.state.tasks);
 
     return (
       <div>
-        <h1 id="tabelLabel" >Weather forecast</h1>
-        <p>This component demonstrates fetching data from the server.</p>
+        <h1 id="tableLabel">Tasks list</h1>
+        <p>Below are users tasks</p>
         {contents}
       </div>
     );
   }
 
-  async populateWeatherData() {
-    const response = await fetch('weatherforecast');
+  async fetchUserTasks() {
+    const response = await fetch('usertasklist');
     const data = await response.json();
-    this.setState({ forecasts: data, loading: false });
+    this.setState({ tasks: data, loading: false });
   }
 }
