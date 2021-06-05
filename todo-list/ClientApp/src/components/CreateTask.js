@@ -13,11 +13,11 @@ export class CreateTask extends Component {
     createTask(taskDescription) {
         const history = this.props.history;
         const requestParameters = {
-            method: 'PUT',
+            method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(taskDescription)
         }
-        fetch('usertasklist', requestParameters)
+        fetch('tasks', requestParameters)
             .then(response => {
                 console.log(response)
                 history.push('/list-tasks')

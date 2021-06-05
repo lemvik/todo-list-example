@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
 import {TaskCard} from "./TaskCard";
 
-export class FetchData extends Component {
-  static displayName = FetchData.name;
+export class ListTasks extends Component {
+  static displayName = ListTasks.name;
 
   constructor(props) {
     super(props);
     this.state = { tasks: [], loading: true };
+    this.taskDeleted = this.taskDeleted.bind(this)
   }
 
   componentDidMount() {
     this.fetchUserTasks();
   }
+  
+  taskDeleted() {
+    this.fetchUserTasks(); 
+  }
 
-  static renderUserTasks(userTasks) {
+  renderUserTasks(userTasks) {
     return (
         <div className="container-fluid">
-          {userTasks.map(userTask => (<TaskCard task={userTask}/>))} 
+          {userTasks.map(userTask => (<TaskCard onDelete={this.taskDeleted} className="m-2" task={userTask}/>))} 
         </div>
     )
   }
@@ -24,7 +29,7 @@ export class FetchData extends Component {
   render() {
     let contents = this.state.loading
       ? <p><em>Loading...</em></p>
-      : FetchData.renderUserTasks(this.state.tasks);
+      : this.renderUserTasks(this.state.tasks);
 
     return (
       <div>
