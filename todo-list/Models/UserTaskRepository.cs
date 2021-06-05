@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace LemVik.Examples.TodoList.Models
 
         public Task<UserTask> GetTask(ulong id)
         {
-            return databaseContext.Tasks.FindAsync(id).AsTask();
+            return databaseContext.Tasks.Include(t => t.SubTasks).FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public Task Delete(UserTask toDelete)
@@ -30,20 +31,9 @@ namespace LemVik.Examples.TodoList.Models
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<UserTask>> ListTasks()
+        public async Task<IEnumerable<UserTask>> ListTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper)
         {
-            var tasks = databaseContext.Tasks.FromSqlRaw(@"
-            WITH RECURSIVE task_list(Id, OwnerId, Summary, Description, CreatedAt, DueAt, Priority, Status, ParentId) AS
-            (
-            SELECT Id, OwnerId, Summary, Description, CreatedAt, DueAt, Priority, Status, ParentId FROM Tasks WHERE ParentId IS NULL
-            UNION ALL
-            SELECT t.Id, t.OwnerId, t.Summary, t.Description, t.CreatedAt, t.DueAt, t.Priority, t.Status, t.ParentId 
-                FROM task_list AS tl INNER JOIN Tasks AS t ON tl.Id = t.ParentId
-            )
-            SELECT * FROM task_list
-            ").AsNoTrackingWithIdentityResolution().AsAsyncEnumerable();
-
-            return await tasks.Where(task => task.Parent == null).ToListAsync();
+            return await mapper(databaseContext.Tasks).ToListAsync();
         }
 
         public Task SaveChangesAsync()

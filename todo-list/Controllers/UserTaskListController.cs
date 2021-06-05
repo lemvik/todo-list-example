@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LemVik.Examples.TodoList.Controllers.DTO;
 using LemVik.Examples.TodoList.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,15 +23,15 @@ namespace LemVik.Examples.TodoList.Controllers
                                       IUserRepository userRepository,
                                       IUserTasksRepository tasksRepository)
         {
-            this.tasksRepository = tasksRepository;
             this.logger = logger;
+            this.tasksRepository = tasksRepository;
             this.userRepository = userRepository;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<UserTask>> List()
+        public async Task<IEnumerable<UserTask>> List([FromQuery] ListQuery query)
         {
-            var tasks = await tasksRepository.ListTasks();
+            var tasks = await tasksRepository.ListTasks(query.Apply);
 
             return tasks.Select(UserTask.FromModel);
         }

@@ -36,7 +36,7 @@ export class FetchData extends Component {
   }
 
   async fetchUserTasks() {
-    const response = await fetch('usertasklist');
+    const response = await fetch('tasks');
     const data = await response.json();
     this.setState({ tasks: data, loading: false });
   }

@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LemVik.Examples.TodoList.Models
@@ -11,7 +13,7 @@ namespace LemVik.Examples.TodoList.Models
 
         Task Delete(UserTask toDelete);
 
-        Task<IEnumerable<UserTask>> ListTasks();
+        Task<IEnumerable<UserTask>> ListTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper);
 
         Task SaveChangesAsync();
     }
