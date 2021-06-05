@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {TaskCard} from "./TaskCard";
 
 export class FetchData extends Component {
   static displayName = FetchData.name;
@@ -14,33 +15,10 @@ export class FetchData extends Component {
 
   static renderUserTasks(userTasks) {
     return (
-      <table className='table table-striped' aria-labelledby="tableLabel">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th>Summary</th>
-            <th>Description</th>
-            <th>Created</th>
-            <th>Due</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userTasks.map(userTask =>
-            <tr key={userTask.id}>
-              <td>{userTask.id}</td>
-              <td>{userTask.priority}</td>
-              <td>{userTask.status}</td>
-              <td>{userTask.summary}</td>
-              <td>{userTask.description}</td>
-              <td>{userTask.createdAt}</td>
-              <td>{userTask.dueAt}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    );
+        <div className="container-fluid">
+          {userTasks.map(userTask => (<TaskCard task={userTask}/>))} 
+        </div>
+    )
   }
 
   render() {

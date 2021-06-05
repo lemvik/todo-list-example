@@ -43,7 +43,7 @@ namespace LemVik.Examples.TodoList.Controllers.DTO
                 Priority = modelTask.Priority,
                 Status = FromModelStatus(modelTask.Status),
                 ParentId = modelTask.Parent?.Id,
-                SubTasks = modelTask.SubTasks.Select(FromModel).ToList()
+                SubTasks = modelTask.SubTasks?.Select(FromModel).ToList()
             };
         }
 

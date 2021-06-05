@@ -19,7 +19,6 @@ namespace LemVik.Examples.TodoList.Models
 
         public string Description { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
 
         public DateTime? DueAt { get; set; }
@@ -31,6 +30,6 @@ namespace LemVik.Examples.TodoList.Models
         public UserTaskStatus Status { get; set; } = UserTaskStatus.Reserved;
         
         public UserTask Parent { get; set; }
-        public List<UserTask> SubTasks { get; set; }
+        public List<UserTask> SubTasks { get; set; } = new();
     }
 }
