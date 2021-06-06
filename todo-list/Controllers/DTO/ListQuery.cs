@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace LemVik.Examples.TodoList.Controllers.DTO
@@ -13,11 +14,24 @@ namespace LemVik.Examples.TodoList.Controllers.DTO
         public int? PriorityMax { get; set; }
         public UserTaskStatus? Status { get; set; }
 
-        public IQueryable<Models.UserTask> Apply(IQueryable<Models.UserTask> source)
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int Page { get; set; } = 0;
+
+        [Required]
+        [Range(1, 50)]
+        public int PageSize { get; set; } = 5;
+        
+        public IQueryable<Models.UserTask> ApplyPaging(IQueryable<Models.UserTask> source)
+        {
+            return ApplyNoPaging(source).Skip(Page * PageSize).Take(PageSize);
+        }
+
+        public IQueryable<Models.UserTask> ApplyNoPaging(IQueryable<Models.UserTask> source)
         {
             return ApplyOrdering(ApplyFiltering(source));
         }
-
+        
         private IQueryable<Models.UserTask> ApplyOrdering(IQueryable<Models.UserTask> source)
         {
             source = OrderBy switch

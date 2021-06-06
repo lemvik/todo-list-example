@@ -29,15 +29,15 @@ namespace LemVik.Examples.TodoList.Controllers
         }
 
         [HttpGet]
-        public async Task<PaginatedResponse<UserTask>> List([FromQuery] ListQuery query, [FromQuery] PageQuery page)
+        public async Task<PaginatedResponse<UserTask>> List([FromQuery] ListQuery query)
         {
-            var count = await tasksRepository.CountTasks(query.Apply);
-            var tasks = await tasksRepository.ListTasks(q => page.Apply(query.Apply(q)));
+            var count = await tasksRepository.CountTasks(query.ApplyNoPaging);
+            var tasks = await tasksRepository.ListTasks(query.ApplyPaging);
 
             return new PaginatedResponse<UserTask>
             {
-                Page = page.Page,
-                PageSize = page.PageSize,
+                Page = query.Page,
+                PageSize = query.PageSize,
                 Total = count,
                 Payload = tasks.Select(UserTask.FromModel)
             };
