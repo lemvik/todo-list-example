@@ -22,7 +22,7 @@ namespace LemVik.Examples.TodoList.Models
 
         public Task<UserTask> GetTask(ulong id)
         {
-            return databaseContext.Tasks.Include(t => t.SubTasks).FirstOrDefaultAsync(t => t.Id == id);
+            return databaseContext.Tasks.FindAsync(id).AsTask();
         }
 
         public Task Delete(UserTask toDelete)
@@ -31,9 +31,14 @@ namespace LemVik.Examples.TodoList.Models
             return Task.CompletedTask;
         }
 
+        public async Task<int> CountTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper)
+        {
+            return await mapper(databaseContext.Tasks).CountAsync();
+        }
+
         public async Task<IEnumerable<UserTask>> ListTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper)
         {
-            return await mapper(databaseContext.Tasks).ToListAsync();
+            return await mapper(databaseContext.Tasks).Include(t => t.SubTasks).ToListAsync();
         }
 
         public Task SaveChangesAsync()

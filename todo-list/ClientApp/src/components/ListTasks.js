@@ -8,6 +8,7 @@ export class ListTasks extends Component {
     super(props);
     this.state = { tasks: [], loading: true };
     this.taskDeleted = this.taskDeleted.bind(this)
+    this.taskBeingEdited = this.taskBeingEdited.bind(this)
   }
 
   componentDidMount() {
@@ -17,11 +18,21 @@ export class ListTasks extends Component {
   taskDeleted() {
     this.fetchUserTasks(); 
   }
+  
+  taskBeingEdited(taskId) {
+    this.props.history.push(`/edit-task/${taskId}`)
+  }
 
   renderUserTasks(userTasks) {
     return (
         <div className="container-fluid">
-          {userTasks.map(userTask => (<TaskCard onDelete={this.taskDeleted} className="m-2" task={userTask}/>))} 
+          {userTasks.map(userTask => (
+              <TaskCard key={userTask.id}
+                        onDelete={this.taskDeleted} 
+                        onEdit={this.taskBeingEdited}
+                        className="m-2" 
+                        task={userTask}/>
+          ))} 
         </div>
     )
   }
@@ -33,8 +44,10 @@ export class ListTasks extends Component {
 
     return (
       <div>
-        <h1 id="tableLabel">Tasks list</h1>
-        <p>Below are users tasks</p>
+        <h3>
+          Tasks list
+          <small className="m-2 text-muted">Below are users  tasks</small>
+        </h3>
         {contents}
       </div>
     );
@@ -42,7 +55,8 @@ export class ListTasks extends Component {
 
   async fetchUserTasks() {
     const response = await fetch('tasks');
-    const data = await response.json();
+    const paginated = await response.json();
+    const data = paginated.payload;
     this.setState({ tasks: data, loading: false });
   }
 }

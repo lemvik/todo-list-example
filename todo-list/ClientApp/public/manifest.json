@@ -1,6 +1,6 @@
 {
-  "short_name": "todo_list",
-  "name": "todo_list",
+  "short_name": "Tasks",
+  "name": "Tasks tracking app",
   "icons": [
     {
       "src": "favicon.ico",

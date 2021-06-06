@@ -1,15 +1,13 @@
 import React, {Component} from 'react';
-import {TaskCreateForm} from "./TaskCreateForm";
+import {TaskEditForm} from "./TaskEditForm";
 
 export class CreateTask extends Component {
-    constructor(props)  {
+    constructor(props) {
         super(props);
-        
-        this.state = {creating: false};
-        
+
         this.createTask = this.createTask.bind(this)
     }
-    
+
     createTask(taskDescription) {
         const history = this.props.history;
         const requestParameters = {
@@ -23,13 +21,13 @@ export class CreateTask extends Component {
                 history.push('/list-tasks')
             })
     }
-    
+
     render() {
         return (
-            <div>
+            <div className="container">
                 <h1>Create task</h1>
-                <TaskCreateForm onSubmit={this.createTask} />
-            </div>            
-        ) 
+                <TaskEditForm onSubmit={this.createTask}/>
+            </div>
+        )
     }
 }

@@ -1,18 +1,18 @@
 import React, {Component} from "react";
+import {statuses} from "./Status";
 
 export class TaskCard extends Component {
     constructor(props) {
         super(props);
         
         this.deleteMe = this.deleteMe.bind(this)
+        this.editMe = this.editMe.bind(this)
         this.state = {operating: false}
     }
-    
     
     deleteMe() {
         this.setState({operating: true});
         const props = this.props;
-        const history = this.props.history;
         const requestParameters = {
             method: 'DELETE',
         }
@@ -21,6 +21,10 @@ export class TaskCard extends Component {
                 console.log(response)
                 props.onDelete(); 
             })
+    }
+    
+    editMe() {
+        this.props.onEdit(this.props.task.id)
     }
 
     render() {
@@ -38,13 +42,19 @@ export class TaskCard extends Component {
                         <div className="col">
                             <dl>
                                 <dt>Status</dt>
-                                <dd>{this.props.task.status}</dd>
+                                <dd>{statuses[this.props.task.status]}</dd>
                             </dl>
                         </div>
                         <div className="col">
                             <dl>
                                 <dt>Created</dt>
                                 <dd>{this.props.task.createdAt}</dd>
+                            </dl>
+                        </div>
+                        <div className="col">
+                            <dl>
+                                <dt>Due</dt>
+                                <dd>{this.props.task.dueAt}</dd>
                             </dl>
                         </div>
                     </div>
@@ -65,8 +75,14 @@ export class TaskCard extends Component {
                         </div>
                     </div>
                     <div className="row">
+                        <div className="col-sm-2">
+                            <dl>
+                                <dt>Sub tasks</dt>
+                                <dd>{this.props.task.subTasksCount}</dd>
+                            </dl>
+                        </div>
                         <div className="col">
-                            <button type="button" className="btn btn-primary m-1">Edit</button>
+                            <button type="button" className="btn btn-primary m-1" onClick={this.editMe}>Edit</button>
                             <button type="button" className="btn btn-secondary m-1">Reparent</button>
                             <button type="button" className="btn btn-danger m-1" onClick={this.deleteMe}>Delete</button>
                         </div>

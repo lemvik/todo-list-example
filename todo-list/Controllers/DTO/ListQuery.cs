@@ -6,7 +6,7 @@ namespace LemVik.Examples.TodoList.Controllers.DTO
     {
         public ulong? Parent { get; set; }
         public string OrderBy { get; set; } = "id";
-        public string Ordering { get; set; } = "asc";
+        public string Ordering { get; set; } = "desc";
         public string Summary { get; set; }
         public string Description { get; set; }
         public int? PriorityMin { get; set; }

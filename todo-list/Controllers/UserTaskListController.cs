@@ -29,11 +29,18 @@ namespace LemVik.Examples.TodoList.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<UserTask>> List([FromQuery] ListQuery query)
+        public async Task<PaginatedResponse<UserTask>> List([FromQuery] ListQuery query, [FromQuery] PageQuery page)
         {
-            var tasks = await tasksRepository.ListTasks(query.Apply);
+            var count = await tasksRepository.CountTasks(query.Apply);
+            var tasks = await tasksRepository.ListTasks(q => page.Apply(query.Apply(q)));
 
-            return tasks.Select(UserTask.FromModel);
+            return new PaginatedResponse<UserTask>
+            {
+                Page = page.Page,
+                PageSize = page.PageSize,
+                Total = count,
+                Payload = tasks.Select(UserTask.FromModel)
+            };
         }
 
         [HttpGet]
@@ -66,7 +73,6 @@ namespace LemVik.Examples.TodoList.Controllers
 
             var taskModel = createdTask.ToModel();
             taskModel.Owner = await userRepository.GetUser(1); // TODO: assign logged-in user.
-            taskModel.SubTasks = new List<Models.UserTask>();
             taskModel.Parent = parentTask;
 
             await tasksRepository.Insert(taskModel);
@@ -88,9 +94,10 @@ namespace LemVik.Examples.TodoList.Controllers
             existing.Summary = userTask.Summary;
             existing.Description = userTask.Description;
             existing.Priority = userTask.Priority;
+            existing.DueAt = userTask.DueAt;
             existing.Status = (Models.UserTaskStatus) userTask.Status;
 
-            if (userTask.ParentId != existing.Parent.Id)
+            if (userTask.ParentId != existing.Parent?.Id)
             {
                 if (userTask.ParentId.HasValue)
                 {

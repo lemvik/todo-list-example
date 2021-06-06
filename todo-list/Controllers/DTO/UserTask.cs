@@ -13,7 +13,7 @@ namespace LemVik.Examples.TodoList.Controllers.DTO
         public DateTime? DueAt { get; set; }
         public int Priority { get; set; }
         public UserTaskStatus Status { get; set; }
-        public List<UserTask> SubTasks { get; set; }
+        public int SubTasksCount { get; set; }
         public ulong? ParentId { get; set; }
 
         public Models.UserTask ToModel()
@@ -42,8 +42,8 @@ namespace LemVik.Examples.TodoList.Controllers.DTO
                 DueAt = modelTask.DueAt,
                 Priority = modelTask.Priority,
                 Status = FromModelStatus(modelTask.Status),
-                ParentId = modelTask.Parent?.Id,
-                SubTasks = modelTask.SubTasks?.Select(FromModel).ToList()
+                SubTasksCount = modelTask.SubTasks.Count,
+                ParentId = modelTask.Parent?.Id
             };
         }
 

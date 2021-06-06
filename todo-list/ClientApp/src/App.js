@@ -6,6 +6,7 @@ import {CreateTask} from './components/CreateTask';
 
 import './custom.css'
 import {ListTasks} from "./components/ListTasks";
+import {EditTask} from "./components/EditTask";
 
 export default class App extends Component {
     static displayName = App.name;
@@ -16,6 +17,7 @@ export default class App extends Component {
                 <Route exact path='/' component={Home}/>
                 <Route path='/list-tasks' component={ListTasks}/>
                 <Route path='/create-task' component={CreateTask}/>
+                <Route path='/edit-task/:id' component={EditTask}/>
             </Layout>
         );
     }

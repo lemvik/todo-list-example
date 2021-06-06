@@ -13,6 +13,8 @@ namespace LemVik.Examples.TodoList.Models
 
         Task Delete(UserTask toDelete);
 
+        Task<int> CountTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper);
+        
         Task<IEnumerable<UserTask>> ListTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper);
 
         Task SaveChangesAsync();
