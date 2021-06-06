@@ -72,7 +72,7 @@ namespace LemVik.Examples.TodoList.Controllers
             await tasksRepository.Insert(taskModel);
             await tasksRepository.SaveChangesAsync();
 
-            return CreatedAtRoute(nameof(Get), new {id = taskModel.Id}, UserTask.FromModel(taskModel));
+            return CreatedAtAction(nameof(Get), new {id = taskModel.Id}, UserTask.FromModel(taskModel));
         }
 
         [HttpPut]

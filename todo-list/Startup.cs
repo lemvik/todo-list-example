@@ -60,9 +60,10 @@ namespace LemVik.Examples.TodoList
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapDefaultControllerRoute();
+               // endpoints.MapControllerRoute(
+               //     name: "default",
+               //     pattern: "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
