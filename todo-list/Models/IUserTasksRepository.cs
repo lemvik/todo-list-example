@@ -17,6 +17,8 @@ namespace LemVik.Examples.TodoList.Models
         
         Task<IEnumerable<UserTask>> ListTasks(Func<IQueryable<UserTask>, IQueryable<UserTask>> mapper);
 
+        Task<IEnumerable<ulong>> SubTaskIds(ulong id);
+        
         Task SaveChangesAsync();
     }
 }

@@ -3,14 +3,16 @@ using System;
 using LemVik.Examples.TodoList.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LemVik.Examples.TodoList.Migrations
 {
     [DbContext(typeof(UserTasksContext))]
-    partial class UserTasksContextModelSnapshot : ModelSnapshot
+    [Migration("20210607083509_Cascade")]
+    partial class Cascade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

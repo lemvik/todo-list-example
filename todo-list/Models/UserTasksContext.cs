@@ -6,6 +6,7 @@ namespace LemVik.Examples.TodoList.Models
     {
         public DbSet<User> Users { get; set; }
         public DbSet<UserTask> Tasks { get; set; }
+        public DbSet<TaskAndParent> TasksAndParents { get; set; }
 
         public UserTasksContext(DbContextOptions options) : base(options)
         {
@@ -21,6 +22,11 @@ namespace LemVik.Examples.TodoList.Models
                     Name = "Tester"
                 }
             });
+            modelBuilder.Entity<UserTask>()
+                        .HasOne<UserTask>(t => t.Parent)
+                        .WithMany(t => t.SubTasks)
+                        .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<TaskAndParent>().ToView(null);
             base.OnModelCreating(modelBuilder);
         }
     }

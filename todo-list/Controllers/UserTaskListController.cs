@@ -97,11 +97,18 @@ namespace LemVik.Examples.TodoList.Controllers
             existing.DueAt = userTask.DueAt;
             existing.Status = (Models.UserTaskStatus) userTask.Status;
 
+            var forbiddenIds = await tasksRepository.SubTaskIds(id);
+
+            if (userTask.ParentId.HasValue && forbiddenIds.Contains(userTask.ParentId.Value))
+            {
+                return BadRequest();
+            }
+
             if (userTask.ParentId != existing.Parent?.Id)
             {
                 if (userTask.ParentId.HasValue)
                 {
-                    var newParent = await tasksRepository.GetTask(id);
+                    var newParent = await tasksRepository.GetTask(userTask.ParentId.Value);
 
                     if (newParent == null)
                     {

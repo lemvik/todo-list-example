@@ -46,6 +46,7 @@ export class ListTasks extends Component {
                     <TaskCard key={userTask.id}
                               onDelete={this.taskDeleted}
                               onEdit={this.taskBeingEdited}
+                              onShowSubTasks={() => {}}
                               className="m-2"
                               task={userTask}/>
                 ))}

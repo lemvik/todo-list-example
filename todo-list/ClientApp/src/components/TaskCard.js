@@ -7,6 +7,7 @@ export class TaskCard extends Component {
         
         this.deleteMe = this.deleteMe.bind(this)
         this.editMe = this.editMe.bind(this)
+        this.showSubTasks = this.showSubTasks.bind(this)
         this.state = {operating: false}
     }
     
@@ -25,6 +26,10 @@ export class TaskCard extends Component {
     
     editMe() {
         this.props.onEdit(this.props.task.id)
+    }
+    
+    showSubTasks() {
+        this.props.onShowSubTasks(this.props.task.id) 
     }
 
     render() {
@@ -75,15 +80,9 @@ export class TaskCard extends Component {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-sm-2">
-                            <dl>
-                                <dt>Sub tasks</dt>
-                                <dd>{this.props.task.subTasksCount}</dd>
-                            </dl>
-                        </div>
                         <div className="col">
+                            <button type="button" className="btn btn-primary m-1" onClick={this.showSubTasks}>Subtasks {this.props.task.subTasksCount}</button>
                             <button type="button" className="btn btn-primary m-1" onClick={this.editMe}>Edit</button>
-                            <button type="button" className="btn btn-secondary m-1">Reparent</button>
                             <button type="button" className="btn btn-danger m-1" onClick={this.deleteMe}>Delete</button>
                         </div>
                     </div>

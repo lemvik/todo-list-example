@@ -41,6 +41,20 @@ namespace LemVik.Examples.TodoList.Models
             return await mapper(databaseContext.Tasks).Include(t => t.SubTasks).ToListAsync();
         }
 
+        public async Task<IEnumerable<ulong>> SubTaskIds(ulong id)
+        {
+            var ids = await databaseContext.TasksAndParents.FromSqlRaw(@"
+            WITH RECURSIVE task_subtasks AS (
+                SELECT Id, ParentId FROM Tasks WHERE Id = {0}
+                UNION ALL
+                SELECT t.Id, t.ParentId FROM Tasks AS t INNER JOIN task_subtasks AS ts ON ts.Id = t.ParentId
+            )
+            SELECT Id, ParentId FROM task_subtasks; 
+            ", id).ToListAsync();
+
+            return ids.Select(t => t.Id);
+        }
+
         public Task SaveChangesAsync()
         {
             return databaseContext.SaveChangesAsync();

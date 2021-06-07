@@ -8,8 +8,6 @@ export class TaskEditForm extends Component {
        
        const dayInMs = 24 * 3600 * 1000;
        
-       console.dir(props)
-
        this.state = {
            id: props.task.id || '',
            summary: props.task.summary || '',
@@ -17,12 +15,13 @@ export class TaskEditForm extends Component {
            dueAt: props.task.dueAt ? new Date(props.task.dueAt) : new Date(Date.now() + dayInMs), 
            priority: props.task.priority || 1, 
            status: props.task.status || 0,
-           parent: props.task.parent || null
+           parentId: props.task.parentId || null
        };
        this.formId = `task-form-${this.state.id ?? 'new'}-`
        this.handleInputChange = this.handleInputChange.bind(this)
        this.handleDueChange = this.handleDueChange.bind(this)
        this.handleSubmit = this.handleSubmit.bind(this)
+       this.handleParentChange = this.handleParentChange.bind(this)
    } 
    
    handleInputChange(event) {
@@ -33,8 +32,17 @@ export class TaskEditForm extends Component {
        this.setState({[name]: value})
    }
    
+   handleParentChange(event) {
+        const value = event.target.value; 
+        if (value === "null" || value === "") {
+            this.setState({parentId: null})
+        } else {
+            this.setState({parentId: parseInt(value, 10)})
+        }
+   }
+   
    handleDueChange(newDue) {
-       this.setState({due: newDue})
+       this.setState({dueAt: newDue})
    }
    
    handleSubmit(event) {
@@ -86,6 +94,15 @@ export class TaskEditForm extends Component {
                <div className="form-group">
                    <label className="mr-2">Due:</label>
                    <DateTimePicker name="due" value={this.state.dueAt} onChange={this.handleDueChange}/>
+               </div>
+               <div className="form-group">
+                   <label htmlFor={`${this.formId}-parent`}>Parent:</label>
+                   <input name="parent"
+                          id={`${this.formId}-parent`}
+                          className="form-control"
+                          type="text"
+                          value={this.state.parentId}
+                          onChange={this.handleParentChange}/>
                </div>
                <button className="btn btn-primary" type="submit">{this.props.editing ? "Update" : "Create"}</button>
            </form>
