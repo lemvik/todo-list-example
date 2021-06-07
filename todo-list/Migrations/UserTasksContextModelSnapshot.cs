@@ -96,7 +96,7 @@ namespace LemVik.Examples.TodoList.Migrations
                     b.HasOne("LemVik.Examples.TodoList.Models.UserTask", "Parent")
                         .WithMany("SubTasks")
                         .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Owner");
 

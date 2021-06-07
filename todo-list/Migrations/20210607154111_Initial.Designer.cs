@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LemVik.Examples.TodoList.Migrations
 {
     [DbContext(typeof(UserTasksContext))]
-    [Migration("20210603102135_InitialSetup")]
-    partial class InitialSetup
+    [Migration("20210607154111_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,15 @@ namespace LemVik.Examples.TodoList.Migrations
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.6");
+
+            modelBuilder.Entity("LemVik.Examples.TodoList.Models.TaskAndParent", b =>
+                {
+                    b.Property<ulong>("Id")
+                        .HasColumnType("bigint unsigned");
+
+                    b.Property<ulong?>("ParentId")
+                        .HasColumnType("bigint unsigned");
+                });
 
             modelBuilder.Entity("LemVik.Examples.TodoList.Models.User", b =>
                 {
@@ -47,7 +56,6 @@ namespace LemVik.Examples.TodoList.Migrations
                         .HasColumnType("bigint unsigned");
 
                     b.Property<DateTime?>("CreatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
@@ -89,7 +97,8 @@ namespace LemVik.Examples.TodoList.Migrations
 
                     b.HasOne("LemVik.Examples.TodoList.Models.UserTask", "Parent")
                         .WithMany("SubTasks")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Owner");
 

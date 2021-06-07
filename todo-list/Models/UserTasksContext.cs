@@ -25,7 +25,7 @@ namespace LemVik.Examples.TodoList.Models
             modelBuilder.Entity<UserTask>()
                         .HasOne<UserTask>(t => t.Parent)
                         .WithMany(t => t.SubTasks)
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<TaskAndParent>().ToView(null);
             base.OnModelCreating(modelBuilder);
         }
