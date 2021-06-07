@@ -71,7 +71,10 @@ namespace LemVik.Examples.TodoList.Controllers
             }
 
             var taskModel = createdTask.ToModel();
-            taskModel.Owner = await userRepository.GetUser(1); // TODO: assign logged-in user.
+            // TODO: assign logged-in user.
+            // TODO: in general, all task-related functionality should operate on a per-user level.
+            // TODO: for that to be feasible I need to implement authorization, but no time to do that.
+            taskModel.Owner = await userRepository.GetUser(1); 
             taskModel.Parent = parentTask;
 
             await tasksRepository.Insert(taskModel);

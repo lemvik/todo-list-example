@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
   db:
     image: mysql
@@ -10,10 +10,21 @@ services:
     volumes:
       - tasks-db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: super-random-password-123456
-      MYSQL_USER: tasksapp
-      MYSQL_PASSWORD: another-super-random-password
-      MYSQL_DATABASE: tasksdb
+      - MYSQL_ROOT_PASSWORD=super-random-password-123456
+      - MYSQL_USER=tasksapp
+      - MYSQL_PASSWORD=another-super-random-password
+      - MYSQL_DATABASE=tasksdb
+
+  tasks:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - "db"
+    environment:
+      - ConnectionStrings__UserTasks=Host=db;User=tasksapp;Protocol=Socket;Password=another-super-random-password;Database=tasksdb
+    ports:
+      - "80:80"
 
 volumes:
   tasks-db-data:
