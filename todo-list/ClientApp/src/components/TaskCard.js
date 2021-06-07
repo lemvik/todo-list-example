@@ -17,7 +17,7 @@ export class TaskCard extends Component {
         const requestParameters = {
             method: 'DELETE',
         }
-        fetch(`tasks/${this.props.task.id}`, requestParameters)
+        fetch(`api/tasks/${this.props.task.id}`, requestParameters)
             .then(response => {
                 console.log(response)
                 props.onDelete(); 

@@ -21,7 +21,7 @@ export class ListTasks extends Component {
     }
 
     taskBeingEdited(taskId) {
-        this.props.history.push(`/edit-task/${taskId}`)
+        this.props.history.push(`/tasks/${taskId}/edit`)
     }
 
     doSort(field) {
@@ -55,7 +55,6 @@ export class ListTasks extends Component {
     }
 
     renderPagination() {
-        console.log(this.state)
         const total = this.state.total;
         const page = this.state.page;
         const pageSize = this.state.pageSize;
@@ -67,7 +66,7 @@ export class ListTasks extends Component {
                 <ul className="pagination">
                     {pages.map(index => <li key={index} 
                                             className={`page-item ${page === (index - 1) ? "active" : ""}`}>
-                        <a className="page-link" onClick={() => this.selectPage(index - 1)}>{index}</a>
+                        <button className="page-link" onClick={() => this.selectPage(index - 1)}>{index}</button>
                     </li>)}
                 </ul>
             </nav>
@@ -88,6 +87,10 @@ export class ListTasks extends Component {
                     <small className="m-2 text-muted">Use buttons to sort</small>
                 </h3>
                 <div className="container p-2">
+                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                        this.doSort("id")
+                    }}>Id
+                    </button>
                     <button type="button" className="m-2 btn btn-secondary" onClick={() => {
                         this.doSort("summary")
                     }}>Summary
@@ -120,7 +123,7 @@ export class ListTasks extends Component {
     }
 
     async fetchUserTasks() {
-        const response = await fetch('tasks?' + new URLSearchParams({
+        const response = await fetch('api/tasks?' + new URLSearchParams({
             page: this.state.page,
             pageSize: this.state.pageSize,
             orderBy: this.state.sort,

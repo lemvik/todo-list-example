@@ -14,7 +14,7 @@ export class EditTask extends Component {
         const requestParameters = {
             method: 'GET'
         };
-        fetch(`tasks/${this.taskId}`, requestParameters)
+        fetch(`api/tasks/${this.taskId}`, requestParameters)
             .then(response => {
                 return response.json()
             })
@@ -30,10 +30,10 @@ export class EditTask extends Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(task)
         }
-        fetch(`tasks/${this.taskId}`, requestParameters)
+        fetch(`api/tasks/${this.taskId}`, requestParameters)
             .then(response => {
                 console.log(response)
-                history.push('/list-tasks')
+                history.push('/tasks')
             })
     }
     

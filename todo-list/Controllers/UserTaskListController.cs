@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LemVik.Examples.TodoList.Controllers.DTO;
@@ -10,7 +9,7 @@ using UserTask = LemVik.Examples.TodoList.Controllers.DTO.UserTask;
 namespace LemVik.Examples.TodoList.Controllers
 {
     [ApiController]
-    [Route("tasks")]
+    [Route("api/tasks")]
     public class UserTaskListController : ControllerBase
     {
         private readonly ILogger<UserTaskListController> logger;

@@ -15,10 +15,10 @@ export class CreateTask extends Component {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(taskDescription)
         }
-        fetch('tasks', requestParameters)
+        fetch('api/tasks', requestParameters)
             .then(response => {
                 console.log(response)
-                history.push('/list-tasks')
+                history.push('/tasks')
             })
     }
 
@@ -26,7 +26,7 @@ export class CreateTask extends Component {
         return (
             <div className="container">
                 <h1>Create task</h1>
-                <TaskEditForm onSubmit={this.createTask}/>
+                <TaskEditForm task={{}} onSubmit={this.createTask}/>
             </div>
         )
     }

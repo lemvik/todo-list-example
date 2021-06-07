@@ -9,7 +9,7 @@ export class TaskEditForm extends Component {
        const dayInMs = 24 * 3600 * 1000;
        
        this.state = {
-           id: props.task.id || '',
+           id: props.task.id || null,
            summary: props.task.summary || '',
            description: props.task.description || '', 
            dueAt: props.task.dueAt ? new Date(props.task.dueAt) : new Date(Date.now() + dayInMs), 
@@ -52,7 +52,7 @@ export class TaskEditForm extends Component {
    
    render() {
        return (
-           <form role="form" onSubmit={this.handleSubmit}>
+           <form onSubmit={this.handleSubmit}>
                <div className="form-group">
                    <label htmlFor={`${this.formId}-summary`}>Summary:</label>
                    <input name="summary" 
@@ -83,10 +83,11 @@ export class TaskEditForm extends Component {
                    <label htmlFor={`${this.formId}-status`}>Status:</label>
                    <select className="form-control" 
                            name="status"
+                           defaultValue={this.state.status}
                            onChange={this.handleInputChange}>
                        {Object.entries(statuses).map(([val, title]) => {
                            return (
-                               <option value={val} selected={val === this.state.status.toString()}>{title}</option>
+                               <option key={val} value={val}>{title}</option>
                            )
                        })}
                    </select>
@@ -101,7 +102,7 @@ export class TaskEditForm extends Component {
                           id={`${this.formId}-parent`}
                           className="form-control"
                           type="text"
-                          value={this.state.parentId}
+                          value={this.state.parentId || ""}
                           onChange={this.handleParentChange}/>
                </div>
                <button className="btn btn-primary" type="submit">{this.props.editing ? "Update" : "Create"}</button>

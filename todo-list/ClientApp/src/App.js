@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router';
+import {Redirect} from 'react-router-dom';
 import {Layout} from './components/Layout';
-import {Home} from './components/Home';
 import {CreateTask} from './components/CreateTask';
 
 import './custom.css'
@@ -14,10 +14,10 @@ export default class App extends Component {
     render() {
         return (
             <Layout>
-                <Route exact path='/' component={Home}/>
-                <Route path='/list-tasks' component={ListTasks}/>
-                <Route path='/create-task' component={CreateTask}/>
-                <Route path='/edit-task/:id' component={EditTask}/>
+                <Route exact path='/' render={() => {return <Redirect to='/tasks'/>}}/>
+                <Route exact path='/tasks' component={ListTasks}/>
+                <Route exact path='/tasks/create' component={CreateTask}/>
+                <Route exact path='/tasks/:id/edit' component={EditTask}/>
             </Layout>
         );
     }

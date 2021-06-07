@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LemVik.Examples.TodoList.Controllers.DTO
 {
     public class UserTask
     {
-        public ulong Id { get; set; }
+        public ulong? Id { get; set; }
         public string Summary { get; set; }
         public string Description { get; set; }
         public DateTime? CreatedAt { get; set; }
@@ -22,7 +20,7 @@ namespace LemVik.Examples.TodoList.Controllers.DTO
             // This method is mostly used during creation of the UserTask via PUT.
             return new()
             {
-                Id = this.Id,
+                Id = Id ?? default,
                 Summary = this.Summary,
                 Description = this.Description,
                 DueAt = this.DueAt,
