@@ -6,9 +6,20 @@ export class ListTasks extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {tasks: [], loading: true, sort: "id", order: "desc", page: 0, pageSize: 5, total: null};
+        this.state = {
+            tasks: [],
+            parentIds: [],
+            loading: true,
+            sort: "id",
+            order: "desc",
+            page: 0,
+            pageSize: 5,
+            total: null
+        };
         this.taskDeleted = this.taskDeleted.bind(this)
         this.taskBeingEdited = this.taskBeingEdited.bind(this)
+        this.showSubTasks = this.showSubTasks.bind(this)
+        this.goToParent = this.goToParent.bind(this)
         this.doSort = this.doSort.bind(this)
     }
 
@@ -23,6 +34,20 @@ export class ListTasks extends Component {
     taskBeingEdited(taskId) {
         this.props.history.push(`/tasks/${taskId}/edit`)
     }
+    
+    showSubTasks(taskId) {
+        const newParents = [...this.state.parentIds, taskId]
+        this.setState({parentIds: newParents, page: 0, loading: true}, () => {
+            this.fetchUserTasks() 
+        })
+    }
+    
+    goToParent() {
+        const newParents = this.state.parentIds.slice(0, -1) 
+        this.setState({parentIds: newParents, page: 0, loading: true}, () => {
+            this.fetchUserTasks()
+        })
+    }
 
     doSort(field) {
         let direction = this.state.order;
@@ -34,7 +59,7 @@ export class ListTasks extends Component {
             this.fetchUserTasks()
         });
     }
-    
+
     selectPage(page) {
         this.setState({loading: true, page: page}, () => this.fetchUserTasks())
     }
@@ -46,7 +71,7 @@ export class ListTasks extends Component {
                     <TaskCard key={userTask.id}
                               onDelete={this.taskDeleted}
                               onEdit={this.taskBeingEdited}
-                              onShowSubTasks={() => {}}
+                              onShowSubTasks={this.showSubTasks}
                               className="m-2"
                               task={userTask}/>
                 ))}
@@ -64,13 +89,25 @@ export class ListTasks extends Component {
         return (
             <nav aria-label="Tasks pagination">
                 <ul className="pagination">
-                    {pages.map(index => <li key={index} 
+                    {pages.map(index => <li key={index}
                                             className={`page-item ${page === (index - 1) ? "active" : ""}`}>
                         <button className="page-link" onClick={() => this.selectPage(index - 1)}>{index}</button>
                     </li>)}
                 </ul>
             </nav>
         )
+    }
+    
+    renderBackButton() {
+        const parentId = [...this.state.parentIds].pop()
+        if (parentId) {
+            return (<button type="button" className="m-2 btn btn-primary" onClick={() => {
+                this.goToParent()
+            }}>Back one level 
+            </button>)
+        } else {
+            return <div />
+        }
     }
 
     render() {
@@ -79,6 +116,7 @@ export class ListTasks extends Component {
             : this.renderUserTasks(this.state.tasks);
 
         let pagination = this.state.loading ? <div/> : this.renderPagination()
+        let backButton = this.renderBackButton()
 
         return (
             <div className="container">
@@ -87,34 +125,41 @@ export class ListTasks extends Component {
                     <small className="m-2 text-muted">Use buttons to sort</small>
                 </h3>
                 <div className="container p-2">
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("id")
-                    }}>Id
-                    </button>
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("summary")
-                    }}>Summary
-                    </button>
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("description")
-                    }}>Description
-                    </button>
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("priority")
-                    }}>Priority
-                    </button>
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("status")
-                    }}>Status
-                    </button>
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("createdAt")
-                    }}>Created
-                    </button>
-                    <button type="button" className="m-2 btn btn-secondary" onClick={() => {
-                        this.doSort("dueAt")
-                    }}>Due
-                    </button>
+                    <div className="row">
+                        <div className="col">
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("id")
+                            }}>Id
+                            </button>
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("summary")
+                            }}>Summary
+                            </button>
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("description")
+                            }}>Description
+                            </button>
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("priority")
+                            }}>Priority
+                            </button>
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("status")
+                            }}>Status
+                            </button>
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("createdAt")
+                            }}>Created
+                            </button>
+                            <button type="button" className="m-2 btn btn-secondary" onClick={() => {
+                                this.doSort("dueAt")
+                            }}>Due
+                            </button>
+                        </div>
+                        <div className="col-sm-2">
+                            {backButton}
+                        </div>
+                    </div>
                 </div>
                 {contents}
                 {pagination}
@@ -123,7 +168,9 @@ export class ListTasks extends Component {
     }
 
     async fetchUserTasks() {
+        const parentId = [...this.state.parentIds].pop()
         const response = await fetch('api/tasks?' + new URLSearchParams({
+            parent: parentId ?? '',
             page: this.state.page,
             pageSize: this.state.pageSize,
             orderBy: this.state.sort,
@@ -132,7 +179,7 @@ export class ListTasks extends Component {
         const paginated = await response.json();
         const data = paginated.payload;
         this.setState({
-            tasks: data, 
+            tasks: data,
             loading: false,
             total: paginated.total
         });

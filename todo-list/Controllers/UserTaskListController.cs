@@ -53,7 +53,7 @@ namespace LemVik.Examples.TodoList.Controllers
                 return NotFound();
             }
 
-            return Ok(task);
+            return Ok(UserTask.FromModel(task));
         }
 
         [HttpPost]

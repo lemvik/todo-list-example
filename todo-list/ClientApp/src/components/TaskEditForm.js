@@ -17,6 +17,7 @@ export class TaskEditForm extends Component {
            status: props.task.status || 0,
            parentId: props.task.parentId || null
        };
+       console.log(props)
        this.formId = `task-form-${this.state.id ?? 'new'}-`
        this.handleInputChange = this.handleInputChange.bind(this)
        this.handleDueChange = this.handleDueChange.bind(this)

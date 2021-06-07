@@ -22,7 +22,7 @@ namespace LemVik.Examples.TodoList.Models
 
         public Task<UserTask> GetTask(ulong id)
         {
-            return databaseContext.Tasks.FindAsync(id).AsTask();
+            return databaseContext.Tasks.Include(t => t.Parent).FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public Task Delete(UserTask toDelete)
